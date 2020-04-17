@@ -28,8 +28,14 @@ class TaskController extends Controller
     }
 
     public function store(Request $request)
-    {
-        return Tasks::create($request->all());
+    { 
+        $task = Tasks::where('tasks', $request->tasks)->get();
+        if(count($task) == 0){
+            Tasks::create($request->all());
+            return '1';
+        } else {
+            return '0';
+        }
     }
     
     public function change(Tasks $id, $status)

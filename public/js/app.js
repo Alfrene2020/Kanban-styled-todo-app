@@ -78359,13 +78359,15 @@ function (_Component) {
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mr-2 my-2"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "w-8/12"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         className: "appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none",
         type: "text",
         id: "newTask",
         name: "newTask",
         placeholder: "Enter you new Task"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "absolute inset-y-0 right-0 pr-4 pt-3"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleChange.bind(this),
@@ -78376,7 +78378,7 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.props.toggleInputField,
         type: "submit",
-        className: "hover:text-red-500 text-white text-sm mt-1 rounded-full"
+        className: "hover:text-teal-400 hover:text-red-500 text-white text-sm mt-1 rounded-full"
       }, "Cancel")));
     }
   }]);
@@ -78715,6 +78717,13 @@ function (_Component) {
     key: "toggleInputField",
     value: function toggleInputField() {
       var toggle = this.state.clicked;
+
+      if (!toggle) {
+        document.getElementById("pendingdiv").className = "w-full relative overflow-x-hidden max-h-76% w-381 overflow-y-auto min-h-58";
+      } else {
+        document.getElementById("pendingdiv").className = "w-full relative overflow-x-hidden max-h-410 w-381 overflow-y-auto min-h-58";
+      }
+
       this.setState({
         clicked: !toggle
       });
@@ -78729,18 +78738,29 @@ function (_Component) {
         tasks: newTask
       };
       axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/addtask', taskObject).then(function (response) {
-        sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
-          icon: 'success',
-          title: 'Task has been added',
-          showConfirmButton: false,
-          timer: 1500
-        });
+        if (response.data == '1') {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
+            icon: 'success',
+            title: 'Task has been added',
+            showConfirmButton: false,
+            timer: 1500
+          });
 
-        _this4.toggleInputField();
+          _this4.toggleInputField();
 
-        _this4.fetchData();
+          _this4.fetchData();
 
-        socket.emit('update');
+          socket.emit;
+        } else {
+          sweetalert2__WEBPACK_IMPORTED_MODULE_3___default.a.fire({
+            title: 'Task already exist',
+            icon: 'warning',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        }
+
+        'update';
       })["catch"](function (errors) {
         console.log(errors);
       });
@@ -78765,7 +78785,7 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "h-screen flex bg-navajowhite font-comic"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "bg-rosybrown border-r-4 border-dashed w-auto"
+        className: "border-yellow-200 bg-rosybrown border-r-4 border-dashed w-auto"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
@@ -78782,7 +78802,7 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__["DragDropContext"], {
         onDragEnd: this.onDragEnd
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "border-dashed w-32 bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto mr-3 shadow-xl"
+        className: "grid-cols-1 w-33% border-yellow-200 border-dashed bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto mr-3 shadow-xl"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "relative ml-2 pt-1 font-semibold"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
@@ -78800,10 +78820,8 @@ function (_Component) {
         droppableId: "droppablePending"
       }, function (provided) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-          className: "overflow-x-hidden max-h-410 w-381 overflow-y-auto absolute min-h-58",
-          style: {
-            width: '28%'
-          },
+          id: "pendingdiv",
+          className: "w-full relative overflow-x-hidden max-h-410 w-381 overflow-y-auto min-h-58",
           ref: provided.innerRef
         }, provided.droppableProps), _this5.state.pending.map(function (pending, index) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__["Draggable"], {
@@ -78813,10 +78831,12 @@ function (_Component) {
           }, function (provided, snapshot) {
             return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
               key: index,
-              className: "bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
+              className: "md:w-83% xl:w-94% lg:w-93% bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
             }, provided.draggableProps, provided.dragHandleProps, {
               ref: provided.innerRef
-            }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, pending.tasks), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "w-83%"
+            }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, pending.tasks)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
               className: "absolute inset-y-0 right-0 pr-4 pt-3"
             }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
               value: pending.id,
@@ -78827,7 +78847,7 @@ function (_Component) {
           });
         }), provided.placeholder);
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "border-dashed w-32 bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto shadow-xl"
+        className: "grid-cols-1 w-33% border-yellow-200 border-dashed bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto shadow-xl"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "ml-2 pt-1 font-semibold"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
@@ -78836,10 +78856,7 @@ function (_Component) {
         droppableId: "droppableCurrent"
       }, function (provided) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-          className: "overflow-x-hidden max-h-410 w-381 overflow-y-auto absolute min-h-58",
-          style: {
-            width: '28%'
-          },
+          className: "w-full relative overflow-x-hidden max-h-410 w-381 overflow-y-auto min-h-58",
           ref: provided.innerRef
         }, provided.droppableProps), _this5.state.current.map(function (current, index) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__["Draggable"], {
@@ -78849,14 +78866,16 @@ function (_Component) {
           }, function (provided, snapshot) {
             return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
               key: index,
-              className: "bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
+              className: "md:w-83% xl:w-94% lg:w-93% bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
             }, provided.draggableProps, provided.dragHandleProps, {
               ref: provided.innerRef
-            }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, current.tasks), provided.placeholder);
+            }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "w-83%"
+            }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, current.tasks)), provided.placeholder);
           });
         }), provided.placeholder);
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "border-dashed w-32 bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto ml-3 shadow-xl"
+        className: "grid-cols-1 w-33% border-yellow-200 border-dashed bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto ml-3 shadow-xl mr-2"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "ml-2 pt-1 font-semibold"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", {
@@ -78865,10 +78884,7 @@ function (_Component) {
         droppableId: "droppableFinished"
       }, function (provided) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
-          className: "overflow-x-hidden max-h-410 w-381 overflow-y-auto absolute min-h-58",
-          style: {
-            width: '28%'
-          },
+          className: "w-full relative overflow-x-hidden max-h-410 w-381 overflow-y-auto min-h-58",
           ref: provided.innerRef
         }, provided.droppableProps), _this5.state.finished.map(function (finished, index) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_5__["Draggable"], {
@@ -78878,14 +78894,16 @@ function (_Component) {
           }, function (provided, snapshot) {
             return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
               key: index,
-              className: "bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
+              className: "md:w-83% xl:w-94% lg:w-93% bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
             }, provided.draggableProps, provided.dragHandleProps, {
               ref: provided.innerRef
-            }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+            }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+              className: "w-83%"
+            }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
               style: {
                 textDecoration: "line-through"
               }
-            }, finished.tasks), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            }, finished.tasks)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
               className: "absolute inset-y-0 right-0 pr-4 pt-3"
             }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
               value: finished.id,
@@ -78939,8 +78957,8 @@ module.exports = "/images/logo.png?8b752670cd00e356ad78ab94ee688688";
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\Kanban-Styled-Todo-App\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\Kanban-Styled-Todo-App\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alfrene\Documents\OJT Files\Kanban-Styled-Todo-App - Copy\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alfrene\Documents\OJT Files\Kanban-Styled-Todo-App - Copy\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ }),

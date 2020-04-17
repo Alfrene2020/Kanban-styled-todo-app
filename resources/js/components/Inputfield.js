@@ -13,20 +13,22 @@ export class Inputfield extends Component
   {
       return(
         <div className="bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mr-2 my-2">
-          <input 
-            className = "appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none" 
-            type="text" 
-            id="newTask" 
-            name="newTask" 
-            placeholder="Enter you new Task"
-          />
+          <div className="w-8/12">
+            <input 
+              className = "appearance-none bg-transparent border-none w-full mr-3 py-1 px-2 leading-tight focus:outline-none" 
+              type="text" 
+              id="newTask" 
+              name="newTask" 
+              placeholder="Enter you new Task"
+            />
+          </div>
           <div className = "absolute inset-y-0 right-0 pr-4 pt-3">
               <button onClick={this.handleChange.bind(this)} type="submit" className="mr-12 flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm text-white py-1 px-2 rounded">
                   Save
               </button>
           </div>
         <div className = "absolute inset-y-0 right-0 pr-4 pt-3">
-            <button onClick={this.props.toggleInputField} type="submit" className="hover:text-red-500 text-white text-sm mt-1 rounded-full">
+            <button onClick={this.props.toggleInputField} type="submit" className="hover:text-teal-400 hover:text-red-500 text-white text-sm mt-1 rounded-full">
                 Cancel
             </button>
         </div>

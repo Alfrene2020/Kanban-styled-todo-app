@@ -238,6 +238,12 @@ export default class Main extends Component {
 
     toggleInputField(){
         const toggle = this.state.clicked;
+        if(!toggle){
+            document.getElementById("pendingdiv").className = "w-full relative overflow-x-hidden max-h-76% w-381 overflow-y-auto min-h-58";
+        } else {
+            document.getElementById("pendingdiv").className = "w-full relative overflow-x-hidden max-h-410 w-381 overflow-y-auto min-h-58";
+        }
+        
         this.setState({
             clicked: !toggle
         });
@@ -249,16 +255,26 @@ export default class Main extends Component {
             tasks: newTask
         }
         axios.post('/api/addtask', taskObject).then(response => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Task has been added',
-                showConfirmButton: false,
-                timer: 1500
-              });
-            
-            this.toggleInputField();
-            this.fetchData();
-            socket.emit('update');
+            if(response.data == '1'){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Task has been added',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                
+                this.toggleInputField();
+                this.fetchData();
+                socket.emit
+            }else{
+                Swal.fire({
+                    title: 'Task already exist',
+                    icon: 'warning',
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
+            }
+            ('update');
         }).catch(errors => {
             console.log(errors);
         })
@@ -277,7 +293,7 @@ export default class Main extends Component {
         }
         return (
             <div className="h-screen flex bg-navajowhite font-comic">
-                <div className = "bg-rosybrown border-r-4 border-dashed w-auto">
+                <div className = "border-yellow-200 bg-rosybrown border-r-4 border-dashed w-auto">
                     <div>
                     <a href='#'><img className = "h-24 object-scale-down w-full" src={Logo} alt="Logo" /></a>
                     </div>
@@ -289,7 +305,7 @@ export default class Main extends Component {
                 <div className="ml-3 container mx-auto flex h-full">
                     <DragDropContext onDragEnd={this.onDragEnd}>
 
-                        <div className="border-dashed w-32 bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto mr-3 shadow-xl">
+                        <div className="grid-cols-1 w-33% border-yellow-200 border-dashed bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto mr-3 shadow-xl">
                             <div className="relative ml-2 pt-1 font-semibold">
                                 <h4 className="text-gray-100 mb-2 mt-3">PENDING TASK</h4>
                                 <div className = "absolute inset-y-0 right-0 pr-4 pt-3">
@@ -301,18 +317,20 @@ export default class Main extends Component {
                             </div>
                             <Droppable droppableId="droppablePending">
                                 {provided => (
-                                    <div className = "overflow-x-hidden max-h-410 w-381 overflow-y-auto absolute min-h-58" style = {{width: '28%'}} ref={provided.innerRef} {...provided.droppableProps}>
+                                    <div id="pendingdiv" className = "w-full relative overflow-x-hidden max-h-410 w-381 overflow-y-auto min-h-58" ref={provided.innerRef} {...provided.droppableProps}>
                                         {this.state.pending.map((pending, index) =>
                                             <Draggable draggableId = {`${pending.id}`} key={pending.id} index={index}>
                                                 {(provided, snapshot) => (
                                                     <div 
                                                         key={index}
-                                                        className="bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
+                                                        className="md:w-83% xl:w-94% lg:w-93% bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                         ref={provided.innerRef}
                                                     >
-                                                        <p>{pending.tasks}</p>
+                                                        <div className="w-83%">
+                                                            <p>{pending.tasks}</p>
+                                                        </div>
                                                         <div className = "absolute inset-y-0 right-0 pr-4 pt-3">
                                                             <button value={pending.id} onClick={this.deleteTask} type="submit" className="hover:bg-red-500 text-white font-bold px-4 rounded-full">
                                                                 X
@@ -329,24 +347,26 @@ export default class Main extends Component {
                             </Droppable>
                         </div>
 
-                        <div className="border-dashed w-32 bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto shadow-xl">
+                        <div className="grid-cols-1 w-33% border-yellow-200 border-dashed bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto shadow-xl">
                             <div className = "ml-2 pt-1 font-semibold">
                                 <h4 className="text-gray-100 mb-2 mt-3">CURRENT TASK</h4>
                             </div>
                             <Droppable droppableId="droppableCurrent">
                                 {provided => (
-                                    <div className = "overflow-x-hidden max-h-410 w-381 overflow-y-auto absolute min-h-58" style = {{width: '28%'}} ref={provided.innerRef} {...provided.droppableProps}>
+                                    <div className = "w-full relative overflow-x-hidden max-h-410 w-381 overflow-y-auto min-h-58" ref={provided.innerRef} {...provided.droppableProps}>
                                         {this.state.current.map((current, index) =>
                                             <Draggable draggableId = {`${current.id}`} key={current.id} index={index}>
                                                 {(provided, snapshot) => (
                                                     <div 
                                                         key={index} 
-                                                        className="bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
+                                                        className="md:w-83% xl:w-94% lg:w-93% bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2"
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                         ref={provided.innerRef}
                                                     >
-                                                        <p>{current.tasks}</p>
+                                                        <div className="w-83%">
+                                                            <p>{current.tasks}</p>
+                                                        </div>
                                                         {provided.placeholder}
                                                     </div>
                                                 )}
@@ -358,24 +378,26 @@ export default class Main extends Component {
                             </Droppable>
                         </div>
 
-                        <div className="border-dashed w-32 bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto ml-3 shadow-xl">
+                        <div className="grid-cols-1 w-33% border-yellow-200 border-dashed bg-rosybrown border-2 rounded-b-lg rounded-t-lg mt-24 mb-24 flex-auto ml-3 shadow-xl mr-2">
                             <div className="ml-2 pt-1 font-semibold">
                                 <h4 className="text-gray-100 mb-2 mt-3">FINISHED TASK</h4>
                             </div>
                             <Droppable droppableId="droppableFinished">
                                 {provided => (
-                                    <div className = "overflow-x-hidden max-h-410 w-381 overflow-y-auto absolute min-h-58" style = {{width: '28%'}} ref={provided.innerRef} {...provided.droppableProps}>
+                                    <div className = "w-full relative overflow-x-hidden max-h-410 w-381 overflow-y-auto min-h-58" ref={provided.innerRef} {...provided.droppableProps}>
                                         {this.state.finished.map((finished, index) =>
                                             <Draggable draggableId = {`${finished.id}`} key={finished.id} index={index}>
                                                 {(provided, snapshot) => (
                                                     <div 
                                                         key={index} 
-                                                        className="bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2" 
+                                                        className="md:w-83% xl:w-94% lg:w-93% bg-rosybrown hover:bg-peru border-navajowhite text-white relative border shadow rounded-full pt-3 pb-3 flex pl-6 mx-2 my-2" 
                                                         {...provided.draggableProps} 
                                                         {...provided.dragHandleProps} 
                                                         ref={provided.innerRef}
                                                     >
-                                                        <p style={{textDecoration: "line-through"}}>{finished.tasks}</p>
+                                                        <div className="w-83%">
+                                                            <p style={{textDecoration: "line-through"}}>{finished.tasks}</p>
+                                                        </div>
                                                         <div className = "absolute inset-y-0 right-0 pr-4 pt-3">
                                                             <button value={finished.id} onClick={this.deleteTask} type="submit" className="hover:bg-red-500 text-white font-bold px-4 rounded-full">
                                                                 X
